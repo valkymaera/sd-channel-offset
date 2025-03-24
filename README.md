@@ -10,7 +10,7 @@ Latent noise channels in Stable Diffusion don’t directly represent pixel color
 
 **Why is this neat?**  
 You can sometimes steer the output toward certain themes or bring out features of your prompt that are hard to directly emphasize. For example **Channel 1** often influences how dark, enclosed, or exposed the scene feels, especially if your prompt contains tokens related to those things.
-It’s important to note that this is not guaranteed for every model or prompt, but many popular models share enough latent structure that it can be a fun technique to experiment with.
+This is not guaranteed to be the same for every model or prompt, but there's a lot of overlap to experiment with.
 
 ---
 
