@@ -6,7 +6,7 @@ An [Automatic1111 WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui
 
 ## About
 
-Latent noise channels in Stable Diffusion don’t directly represent pixel color values. Instead, each channel in the latent space is more conceptually tied to certain features learned in training; though in some cases they do have color or hue influences. Because of that, different models (and different prompts) may respond to offsets on each channel in unique ways, often highlighting or suppressing various conceptual elements. 
+Latent noise channels in Stable Diffusion don’t directly represent pixel color values, though they may technically relate to CMYK values. Instead, each channel in the latent space is more conceptually tied to certain features learned in training from such noise or mean values; though they still tend to influence hue. Different models (and different prompts) may respond to offsets on each channel in unique ways, often highlighting or suppressing various conceptual elements, perhaps because they tended to occur in images with higher or lower CMYK means. 
 
 **Why is this neat?**  
 You can sometimes steer the output toward certain themes or bring out features of your prompt that are hard to directly emphasize. For example **Channel 1** often influences how dark, enclosed, or exposed the scene feels, especially if your prompt contains tokens related to those things.
@@ -42,7 +42,7 @@ By tinkering with various channels, you can fine-tune conceptual features, somet
 
 ## Important Notes
 
-- **Channel Range**: Channels 5 through 8 are not generally used by many models, though some can support up to 8. They’re included here for completeness, but won't always do anything.
+- **Channel Range**: Channels 5 through 8 are not generally used, though supposedly some models can support up to 8. They’re included here for completeness, but will rarely do anything in my experience.
 - **RNG Intercept**: This extension works by intercepting `rng.py`’s `ImageRNG.next()` method and adding the requested offsets into the generated noise. Other extensions doing similar intercepts may conflict.
 - **Model/Prompt Sensitivity**: Different models and prompts may respond more or less sensitively to channel offsets.  
 
@@ -102,7 +102,7 @@ Below is a grid example from one model/prompt, adjusting each channel in increme
 
 ![Offset Grid](https://github.com/user-attachments/assets/233f7c99-dde5-48f3-8529-ada60ac5a305)
 
-By mixing and matching these offsets across channels, we can fine-tune lighting and color influences. Here’s a quick demonstration with the same seettings as above, but with various channel offsets used like a color filter or stylistic adjustment:
+By mixing and matching these offsets across channels, we can fine-tune lighting and color influences. Here’s a quick demonstration with the same settings as above, but with various channel offsets used like a color filter or stylistic adjustment:
 
 ![Channel Shifts](https://github.com/user-attachments/assets/4301846b-864a-41dc-9b95-722c6f285902)
 
