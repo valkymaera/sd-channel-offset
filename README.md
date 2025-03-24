@@ -102,7 +102,7 @@ Below is a grid example from one model/prompt, adjusting each channel in increme
 
 ![Offset Grid](https://github.com/user-attachments/assets/233f7c99-dde5-48f3-8529-ada60ac5a305)
 
-By mixing and matching these offsets across channels, we can fine-tune lighting and color influences. Here’s a quick demonstration with the same seettings as above, but with various channel offsets used like a color filter or stylistic adjustment:
+By mixing and matching these offsets across channels, we can fine-tune lighting and color influences. Here’s a quick demonstration with the same settings as above, but with various channel offsets used like a color filter or stylistic adjustment:
 
 ![Channel Shifts](https://github.com/user-attachments/assets/4301846b-864a-41dc-9b95-722c6f285902)
 
