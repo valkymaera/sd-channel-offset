@@ -1,67 +1,112 @@
-# sd-channel-offset
-Automatic1111 extension allowing an offset to be applied to latent noise per-channel before generation
 
-About:
-latent noise channels don't represent pixel color values, not really. I mean I think they're related to the mean color values of certain images in training, but the result of that is the channels are tied to concepts more than colors in the output (although they do influence hue). For this reason, different models may respond to channels differently based on how they were trained. Prompts will also change how much influence a channel has as modifying them will bring out more features within their concept space.
+# SD-Channel-Offset
+An [Automatic1111 WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) extension allowing an offset to be applied to latent noise **per-channel** before generation.
 
-However there are some neat domains that tend to be shared among models. Notably, channel 1 tends to influence concepts related to being enclosed, shaded, and/or dark, among other things, allowing us to draw out those features in a way that can be challenging from tokens and emphasis alone.
+---
 
-Consider the following alien landscape: 
-![d](https://github.com/user-attachments/assets/8c7af040-05ab-4dd2-bc55-8103c7d808bd)
+## About
 
-if we crank channel 1 very low, we can see the space become warmer, shaded, and more enclosed.
-![a](https://github.com/user-attachments/assets/353efe3e-0a1d-42e3-9cb5-42db14673994)
+Latent noise channels in Stable Diffusion don’t directly represent pixel color values. Instead, each channel in the latent space is more conceptually tied to certain features learned in training; though in some cases they do have color or hue influences. Because of that, different models (and different prompts) may respond to offsets on each channel in unique ways, often highlighting or suppressing various conceptual elements. 
 
-if we crank channel 1 very high, we see it instead become open, exposed, and brighter.
-![2](https://github.com/user-attachments/assets/6faf03fa-20b0-40f3-8de2-c97d78619e3f)
+**Why is this neat?**  
+You can sometimes steer the output toward certain themes or bring out features of your prompt that are hard to directly emphasize. For example **Channel 1** often influences how dark, enclosed, or exposed the scene feels, especially if your prompt contains tokens related to those things.
+It’s important to note that this is not guaranteed for every model or prompt, but many popular models share enough latent structure that it can be a fun technique to experiment with.
 
+---
 
-By tinkering with various channels, we can fine tune conceptual features (albeit sometimes a little blindly), often enhancing them beyond what we usually get out of tokens and emphasis alone.
+## Examples
 
-![1](https://github.com/user-attachments/assets/7aaf3e19-537b-4680-aaea-91e38fd1a07c)
-![5](https://github.com/user-attachments/assets/4914121d-8166-467b-b95c-3d300191b4ed)
+Consider the following alien landscape:
 
-Important notes:
-* Offset is applied each time noise is applied, meaning for Euler/ ancestral samplers that fetch noise every step, smaller values will be much more impactful. 
-* Channels 5 through 8 are not generally used though supposedly some models can support up to 8 channels, so I included it.
-* This extension works by intercepting rng.py ImageRNG.next() and adding values into the result. Other extensions that intercept it might prevent it from working, or vice versa.
-* Different models may respond differently or be more/less sensitive to the influence of each channel
+![landscape](https://github.com/user-attachments/assets/25a5a43a-299a-4cf7-b70e-bc83f234bf21)
 
-UI:
-Drop Mean Before Offset: this subtracts the mean value from the noise before doing anything else, "centering" it. 
-Drop Channel Means Before Offset: this subtracts the mean value for each channel separately, before applying offsets. 
-Both of these can help keep offset changes in a "healthy" range by reducing extremes, but the effect is usually subtle, and I've considered removing them.
-I left them in for tinkerers like myself.
+- **Channel 1 Very Low**  
+  The space becomes warmer, shaded, and more enclosed.
 
-Drop Mean After Offset: this subtracts the final mean value from the noise, which can have significant impact.
-This will often bring the composition closer to the original while keeping the relative weight adjustments of each channel, but you will often lose some of the intensity of the offsets, as well as their negative or positive value based on the value of the mean.
-It can be useful for restoring elements of the original output that you prefer, but it's similar to centering the sliders along their total average (while also considering inherent noise values). 
-If you keep the sliders at zero this is basically the same thing as Drop Mean Before Offset, because it's still dropping whatever mean value is there.
-
-original:
-![k1](https://github.com/user-attachments/assets/3c8bb2ed-6be0-42bf-8343-0bc323d77349)
-
-after offset tinkering:
-![k2](https://github.com/user-attachments/assets/4f348a9e-2686-43e0-b282-11ec9a8a21e3)
-
-droping mean:
-![k3](https://github.com/user-attachments/assets/bc9f3445-ab70-4e5a-b788-dd708f32b0ef)
-
-The above samples use SDXL model "quadpipe"
-https://civitai.com/models/996342/quadpipe-or-qp
-
-
-Channel Effects:
-The effects of each channel vary per model and prompt (for example, channel 1 will have a stronger 'darkening' effect if you include tokens related to darkness in your prompt), but tend to have some overlap in effect on style and color influence.  
+  ![low channel 1](https://github.com/user-attachments/assets/3d896b96-3926-408e-ad53-b1429bdeef67)
 
 
 
+- **Channel 1 Very High**  
+  The scene instead becomes open, exposed, and brighter.
+  
+  ![high channel 1](https://github.com/user-attachments/assets/a0f30030-8be9-4b02-99ce-ebf3b1134499)
+
+
+By tinkering with various channels, you can fine-tune conceptual features, sometimes pushing them beyond what tokens and emphasis alone would accomplish.
+
+![sample no offset](https://github.com/user-attachments/assets/e2c5ebb3-63ec-457e-a70b-576ce3fb0816)
+![sample dark offset](https://github.com/user-attachments/assets/f9030a10-fcf8-44c6-8f60-4cc77522c70b)
+
+---
+
+## Important Notes
+
+- **Channel Range**: Channels 5 through 8 are not generally used by many models, though some can support up to 8. They’re included here for completeness, but won't always do anything.
+- **RNG Intercept**: This extension works by intercepting `rng.py`’s `ImageRNG.next()` method and adding the requested offsets into the generated noise. Other extensions doing similar intercepts may conflict.
+- **Model/Prompt Sensitivity**: Different models and prompts may respond more or less sensitively to channel offsets.  
+
+---
+
+## UI Overview
+
+1. **Drop Mean After Offset**  
+   - Subtracts the final mean value from the noise *after* all offsets have been applied, effectively “centering” the output.  
+   - This often brings the composition somewhat closer to the original while maintaining the relative weight of each channel.  
+   - It can also reduce the intensity of the offsets, since extreme positive/negative values are often pulled back toward zero.
+
+2. **Save Meta**  
+   - If enabled, stores the offset values in the generated image’s metadata (`infotext`).  
+   - This is recommended, as it lets you load settings from the image later.
+
+---
+
+### Example: Dropping the Mean
+
+- **Original**  
+  ![original knight](https://github.com/user-attachments/assets/17491dbc-3353-462b-aecb-7856c98c050b)
+
+
+- **After Offset Tinkering**  
+  ![offset knight](https://github.com/user-attachments/assets/94193ed1-c77a-4bf0-90ee-3edf47892669)
 
 
 
+- **Dropping Mean**  
+  ![dropped mean knight](https://github.com/user-attachments/assets/8779614e-0896-4b67-ad54-101e5b8bc04e)
 
+These samples use the **SDXL model “quadpipe”**:  
+[quadpipe on civitai](https://civitai.com/models/996342/quadpipe-or-qp)
 
+---
 
+## Experimental / Tinker Options
+
+1. **Drop Mean Before Offset**  
+   - Subtracts the mean of the noise *before* applying any offsets, centering it early.
+2. **Drop Channel Means Before Offset**  
+   - Subtracts the mean of *each channel* separately before offsets are applied.
+
+These two options can help keep offset changes in a more “healthy” range by reducing extremes in the noise. The overall effect is usually quite subtle, so feel free to ignore them if you don’t want to overcomplicate things.
+
+3. **Apply Only to First Step**  
+   - By default, only the *first* noise sample has offset applied. Some samplers (e.g. Euler) gather noise every step.  
+   - If you disable this, offsets will be applied *every time noise is injected*, making the offsets more pronounced for samplers that apply them more than once.  
+   - For samplers that only ever gather noise once, this won’t make a difference.
+
+---
+
+## Channel Effects
+
+The impact of each channel can vary depending on your model and prompt. Sometimes, a channel might have a more dramatic effect if the prompt’s tokens align with that channel’s conceptual “role.” For instance, if the prompt includes strong darkness-related tokens, a negative channel 1 might bring out shadows more strongly.
+
+Below is a grid example from one model/prompt, adjusting each channel in increments of `0.1`:
+
+![Offset Grid](https://github.com/user-attachments/assets/233f7c99-dde5-48f3-8529-ada60ac5a305)
+
+By mixing and matching these offsets across channels, we can fine-tune lighting and color influences. Here’s a quick demonstration of combine channel offsets used like a color filter or stylistic adjustment:
+
+![Channel Shifts](https://github.com/user-attachments/assets/4301846b-864a-41dc-9b95-722c6f285902)
 
 
 
