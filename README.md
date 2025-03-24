@@ -42,7 +42,7 @@ By tinkering with various channels, you can fine-tune conceptual features, somet
 
 ## Important Notes
 
-- **Channel Range**: Channels 5 through 8 are not generally used by many models, though some can support up to 8. They’re included here for completeness, but won't always do anything.
+- **Channel Range**: Channels 5 through 8 are not generally used, though supposedly some can support up to 8. They’re included here for completeness, but will rarely do anything in my experience.
 - **RNG Intercept**: This extension works by intercepting `rng.py`’s `ImageRNG.next()` method and adding the requested offsets into the generated noise. Other extensions doing similar intercepts may conflict.
 - **Model/Prompt Sensitivity**: Different models and prompts may respond more or less sensitively to channel offsets.  
 
