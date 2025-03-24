@@ -6,7 +6,7 @@ An [Automatic1111 WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui
 
 ## About
 
-Latent noise channels in Stable Diffusion don’t directly represent pixel color values. Instead, each channel in the latent space is more conceptually tied to certain features learned in training; though in some cases they do have color or hue influences. Because of that, different models (and different prompts) may respond to offsets on each channel in unique ways, often highlighting or suppressing various conceptual elements. 
+Latent noise channels in Stable Diffusion don’t directly represent pixel color values, though they may technically relate to CMYK values. Instead, each channel in the latent space is more conceptually tied to certain features learned in training from such noise or mean values; though they still tend to influence hue. Different models (and different prompts) may respond to offsets on each channel in unique ways, often highlighting or suppressing various conceptual elements, perhaps because they tended to occur in images with higher or lower CMYK means. 
 
 **Why is this neat?**  
 You can sometimes steer the output toward certain themes or bring out features of your prompt that are hard to directly emphasize. For example **Channel 1** often influences how dark, enclosed, or exposed the scene feels, especially if your prompt contains tokens related to those things.
