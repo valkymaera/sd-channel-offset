@@ -15,6 +15,7 @@ This is not guaranteed to be the same for every model or prompt, but there's a l
 ---
 
 ## Examples
+(The ui in these examples is older but the function is the same. The new UI has a couple check boxes tucked away instead of up front).
 
 Consider the following alien landscape:
 
